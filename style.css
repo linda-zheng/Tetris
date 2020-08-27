@@ -5,7 +5,26 @@ body {
     font-size: 1.5em;
     text-align: center;
 }
+
 canvas {
     border: .1em solid #fff;
-    height: 80vh;
+    width: auto;
+    height: 80%;
+}
+
+.text {
+    width: auto;
+    color: #fff;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 1em;
+}
+
+.block {
+    width: 50%;
+    float:left; 
+    justify-content: center;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
 }
