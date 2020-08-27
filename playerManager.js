@@ -1,0 +1,29 @@
+class PlayerManager {
+    constructor(document) {
+        this.document = document;
+        this.template = this.document.querySelector('#player-template');
+        this.instances = new Set;
+    }
+
+    // add a new player
+    // returns the controller for that player
+    addPlayer() {
+        // create new element for new player
+        // true = deep import
+        const element = this.document
+            .importNode(this.template.content, true)
+            .children[0];
+        const player = new Player(element);
+        // add new element to browser
+        this.document.body.appendChild(element);
+        // add new player to instances
+        this.instances.add(player);
+        return player;
+    }
+
+    // remove a player
+    removePlayer(player) {
+        this.instances.delete(player);
+        this.document.body.removeChild(player.element);
+    }
+}

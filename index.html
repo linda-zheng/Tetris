@@ -4,15 +4,21 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-        <div class="block" id="block1">
-            <div class="text" id="score">Score: 0</div>
-            <!--canvas element is used to draw graphics-->
-            <canvas id ="tetris" width="240" height="400"></canvas>
-        </div>
+        <template id="player-template">
+            <div class="player">
+                <div class="score">Score: 0</div>
+                <!--canvas element is used to draw graphics-->
+                <canvas class="tetris" width="240" height="400"></canvas>
+            </div>
+        </template>
+
         <div class="block" id="block2">
             <div class="text" id="commands"></div>
         </div>
         <!--import scripts-->
+        <script src="connManager.js"></script>
+        <script src="playerManager.js"></script>
+        <script src="controller.js"></script>
         <script src="keycodes.js"></script>
         <script src="block.js"></script>
         <script src="blockFactory.js"></script>

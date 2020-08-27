@@ -1,9 +1,9 @@
 class Drawer {
-    constructor(player, document) {
+    constructor(player, element) {
         
         this.player = player;
-        this.score = document.getElementById('score');
-        this.canvas = document.getElementById("tetris");
+        this.score = element.querySelector('.score');
+        this.canvas = element.querySelector('canvas');
         this.context = this.canvas.getContext('2d');
         // make everything 20 times bigger
         this.context.scale(20, 20);
@@ -24,7 +24,10 @@ class Drawer {
         this.context.fillStyle = '#000';
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.updateScore();
+    }
 
+    // start updating the display
+    run() {
         // loop the update
         let lastTime = 0;
         const update = (time = 0) => {
@@ -39,7 +42,6 @@ class Drawer {
         update();
     }
 
-    
 
     // draw the matrix with offset on the board
     drawMatrix(matrix, offset) {

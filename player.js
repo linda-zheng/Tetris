@@ -1,6 +1,6 @@
 class Player
 {
-    constructor(document) 
+    constructor(element) 
     {
         this.factory = new BlockFactory();
         this.block = this.factory.createBlock('T');
@@ -12,7 +12,13 @@ class Player
         this.dropInterval = 1000;
 
         // creating the drawer starts the game
-        this.drawer = new Drawer(this, document);
+        this.element = element;
+        this.drawer = new Drawer(this, element);
+    }
+
+    // start the game
+    run() {
+        this.drawer.run();
     }
 
     // update the times to figure out when to drop the block
