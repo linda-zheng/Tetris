@@ -1,6 +1,6 @@
 class Player
 {
-    constructor(element) 
+    constructor(element) //, name
     {
         this.factory = new BlockFactory();
         this.block = this.factory.createBlock('T');
@@ -12,6 +12,7 @@ class Player
         this.dropInterval = 1000;
 
         // creating the drawer starts the game
+        //this.name = name;
         this.element = element;
         this.drawer = new Drawer(this, element);
     }
@@ -27,6 +28,11 @@ class Player
         if (this.dropCounter > this.dropInterval) {
             this.moveBlock(1, false);
         }
+    }
+
+    // get name
+    getName() {
+        return this.name;
     }
 
     // get score

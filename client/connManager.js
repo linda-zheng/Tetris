@@ -1,7 +1,10 @@
 class ConnManager {
-    constructor(document) {
+    constructor(document, playerManager) {
         this.conn = null;
         this.document = document;
+        //this.name = "";
+        this.peers = new Map;
+        this.playerManager = playerManager;
     }
 
     // connect to a given address
@@ -24,9 +27,29 @@ class ConnManager {
     receive(msg) {
         console.log(msg);
         const data = JSON.parse(msg);
-        if (data.type == 'room-joined') {
-            window.location.hash = data.id;
+        if (data.type == 'broadcast-join') {
+            this.updatePlayerManager(data.peers);
         }
+    }
+
+    // update the player manager to keep track of current players
+    updatePlayerManager(peers) {
+        const me = peers.you;
+        const clients = peers.clients.filter(id => me !== id);
+        // check for new players
+        clients.forEach(id => {
+            if (!this.peers.has(id)){
+                const player = this.playerManager.addPlayer();
+                this.peers.set(id, player);
+            }
+        });
+        // remove non existent players
+        [...this.peers.entries()].forEach(([id, player]) => {
+            if (clients.indexOf(id) === -1) {
+                this.playerManager.removePlayer(player);
+                this.peers.delete(id);
+            }
+        })
     }
 
     // send data using JSON format
@@ -38,19 +61,25 @@ class ConnManager {
     // join a room
     join(self) {
         const room = self.document.getElementById('roomInput').value;
-        const name = self.document.getElementById('nameInput').value;
+        //const name = self.document.getElementById('nameInput').value;
+        // check that fields are valid
         if (room == "") {
             self.document.getElementById('roomInput').value = "invalid room";
         } 
-        if (name == "") {
+        /*if (name == "") {
             self.document.getElementById('nameInput').value = "invalid name";
-        } 
+        }*/
         
-        if (room !== "" && name !== "") {
-            self.send({type: 'join-room', id: room, name: name});
+        if (room !== "") { // && name !== ""
+            self.send({type: 'join-room', id: room});
+            //self.send({type: 'join-room', id: room, name: name});
         }
-
-        self.document.getElementById('block').classList.add('smallBlock');
+        //self.name = name;
+        self.document.getElementById('block').classList.add('small');
+        const localPlayer = self.playerManager.addPlayer();
+        localPlayer.element.querySelector('.tetris').classList.add('local');
+        const controller = new Controller(document, localPlayer);
+        localPlayer.run();
     }
 
 }

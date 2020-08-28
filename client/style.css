@@ -6,7 +6,7 @@ body {
     line-height: 1.5em;
 }
 
-.input, .score, .text, .btn {
+.input, .score, .name, .text, .btn {
     color: #fff;
     text-align: center;
     font-size: 1em;
@@ -37,7 +37,7 @@ body {
 }
 
 .player {
-    width: 50%;
+    width: 30%;
     float:left; 
     justify-content: center;
     text-align: center;
@@ -45,10 +45,14 @@ body {
     margin-left: auto;
 }
 
-.canvas {
-    border: .1em solid #fff;
+.tetris {
+    border: .1em solid #404040;
     width: auto;
     height: 80%;
+}
+
+.tetris.local {
+    border: .1em solid #fff;
 }
 
 .block {
@@ -60,6 +64,6 @@ body {
     margin-left: auto;
 }
 
-.smallblock {
-    width: 50%;
+.block.small {
+    width: 30%;
 }

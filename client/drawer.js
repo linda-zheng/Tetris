@@ -1,7 +1,8 @@
 class Drawer {
     constructor(player, element) {
-        
         this.player = player;
+        /*this.name = element.querySelector('.name');
+        this.name.innerText = this.player.getName();*/
         this.score = element.querySelector('.score');
         this.canvas = element.querySelector('canvas');
         this.context = this.canvas.getContext('2d');

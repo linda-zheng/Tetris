@@ -7,9 +7,11 @@
         <div class="block" id="block">
             <div class="text" id="commands"></div>  
             <br/><br/>  
+        <!--
             <div class="text">Enter your name:</div>
             <input class="input" id="nameInput" type="text" maxlength="10">
             <br/><br/>
+        -->
             <div class="text">Enter a room code:</div>
             <input class="input" id="roomInput" type="text" maxlength="10">
             <br/><br/>
@@ -17,6 +19,7 @@
         </div>
         <template id="player-template">
             <div class="player">
+                <div class="name"></div>
                 <div class="score">Score: 0</div>
                 <!--canvas element is used to draw graphics-->
                 <canvas class="tetris" width="240" height="400"></canvas>
