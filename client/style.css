@@ -1,0 +1,65 @@
+body {
+    background: #202028;
+    color: #fff;
+    font-family: sans-serif;
+    text-align: center;
+    line-height: 1.5em;
+}
+
+.input, .score, .text, .btn {
+    color: #fff;
+    text-align: center;
+    font-size: 1em;
+    font-family: sans-serif;
+    line-height: 1.1em;
+}
+
+.input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #fff;
+    width: 50%;
+    outline: none;
+}
+
+.btn {
+    color: #ffffff;
+    background: #404040;
+    padding: 8px;
+    border: none;
+    display: inline-block;
+    transition: all 0.4s ease 0s;
+}
+
+.btn:hover {
+    border: 1px solid #ffffff;
+    transition: all 0.3s ease 0s;
+}
+
+.player {
+    width: 50%;
+    float:left; 
+    justify-content: center;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.canvas {
+    border: .1em solid #fff;
+    width: auto;
+    height: 80%;
+}
+
+.block {
+    width: 100%;
+    float:left; 
+    justify-content: center;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.smallblock {
+    width: 50%;
+}

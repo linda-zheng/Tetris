@@ -1,0 +1,12 @@
+{
+  "name": "tetris-server",
+  "version": "0.0.0",
+  "main": "main.js",
+  "private": true,
+  "dependencies": {
+    "ws": "~7.3.1"
+  },
+  "scripts": {
+    "start": "node main.js"
+  }
+}
