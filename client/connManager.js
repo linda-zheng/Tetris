@@ -31,12 +31,24 @@ class ConnManager {
         if (data.type == 'broadcast-join') {
             this.updatePlayerManager(data.peers);
         } else if (data.type == 'broadcast-state') {
-            this.updatePlayer(data.senderID, data.data);
+            this.updatePlayerComponent(data.senderID, data.data);
+        } else if (data.type == 'serialized-state') {
+            this.updatePlayer(data.peerID, data.state);
         }
     }
 
-    // update the state of a given player
-    updatePlayer(id, data) {
+    // update entire state of a given player
+    updatePlayer(id, state) {
+        if (!this.peers.has(id)) {
+            console.error("Client does not exist", id);
+            return;
+        }
+        const player = this.peers.get(id);
+        this.unserialize(state, player);
+    }
+
+    // update part of a given player
+    updatePlayerComponent(id, data) {
         if (!this.peers.has(id)) {
             console.error("Client does not exist", id);
             return;
@@ -46,12 +58,7 @@ class ConnManager {
             player.score = data.value;
             player.drawer.updateScore(data.value);
         } else {
-            if (data.prop == 'block') {
-                player.block.pos = data.value.pos;
-                player.block.matrix = data.value.matrix;
-            } else if (data.prop == 'board') {
-                player.board.matrix = data.value.matrix;
-            }
+            player[data.prop] = Object.assign(player[data.prop], data.value);
             player.drawer.draw();
         }
     }
@@ -96,9 +103,6 @@ class ConnManager {
         }*/
         
         if (room !== "") { // && name !== ""
-            self.send({type: 'join-room', id: room});
-            //self.send({type: 'join-room', id: room, name: name});
-
             // delete all current games on the screen
             if (self.localPlayer) {
                 self.playerManager.removePlayer(self.localPlayer);
@@ -115,6 +119,13 @@ class ConnManager {
             self.watchEvents();
             self.controller = new Controller(document, self.localPlayer);
             self.localPlayer.run();
+
+            // send serialized state to server
+            self.send({
+                type: 'join-room',
+                id:room,
+                state: self.serialize(self.localPlayer),
+            })
         }
         //self.name = name;
     }
@@ -124,12 +135,36 @@ class ConnManager {
         const localPlayer = this.localPlayer;
         ['board', 'score', 'block'].forEach(prop => {
             localPlayer.events.listen(prop, () => {
-                //console.log(localPlayer[prop]);
                 this.send({
                     type: 'state-update',
                     player: {prop: prop, value: localPlayer[prop]},
                 });
             });
         });
+    }
+
+    // serialize player state
+    serialize(player) {
+        return {
+            block: {
+                matrix: player.block.matrix,
+                pos: player.block.pos,
+            },
+            board: {
+                matrix: player.board.matrix,
+                w: player.board.w,
+                h: player.board.h,
+            },
+            score: player.score,
+        };
+    }
+
+    // unserialize and update player state
+    unserialize(state, player) {
+        player.block = Object.assign(player.block, state.block);
+        player.board = Object.assign(player.board, state.board);
+        player.score = state.score;
+        player.drawer.updateScore(player.score);
+        player.drawer.draw();
     }
 }

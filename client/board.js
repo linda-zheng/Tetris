@@ -2,6 +2,7 @@ class Board {
     constructor(w=12, h=20) {
         this.w = w;
         this.h = h;
+        this.matrix = [];
         this.clear();
     }
 

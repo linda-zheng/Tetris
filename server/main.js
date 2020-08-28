@@ -36,6 +36,24 @@ function broadcastState(sender, data) {
             data: data,
         })
     })
+
+    // update client state
+    sender.state[data.prop] = data.value;
+}
+
+// send state of room to newly joined client
+function fetchRoomState(client) {
+    const clients = [...client.room.clients];
+    clients.forEach(c => {
+        // don't send your own state
+        if (c === client) { return;}
+        // send state of all other clients
+        client.send ({
+            type: 'serialized-state',
+            peerID: c.id,
+            state: c.state,
+        })
+    })
 }
 
 // generate a unique client id
@@ -75,7 +93,8 @@ server.on('connection', conn => {
     conn.on('message', msg => {
         data = JSON.parse(msg)
         if (data.type == 'join-room') {
-            client.name = data.name;
+            client.state = data.state;
+            //client.name = data.name;
             // remove from previous room
             var oldroom = client.room;
             if (oldroom) {
@@ -100,6 +119,7 @@ server.on('connection', conn => {
             }
             room.join(client);
             broadcastJoin(room);
+            fetchRoomState(client);
             console.log(rooms);
         } else if (data.type == 'state-update') {
             broadcastState(client, data.player);

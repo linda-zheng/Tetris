@@ -3,6 +3,7 @@ class Client {
         this.conn = conn;
         this.room = null;
         this.id = id;
+        this.state = {};
         //this.name = "";
     }
 
