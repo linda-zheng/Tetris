@@ -27,10 +27,32 @@ class ConnManager {
 
     // receive and parse JSON data
     receive(msg) {
-        console.log(msg);
         const data = JSON.parse(msg);
         if (data.type == 'broadcast-join') {
             this.updatePlayerManager(data.peers);
+        } else if (data.type == 'broadcast-state') {
+            this.updatePlayer(data.senderID, data.data);
+        }
+    }
+
+    // update the state of a given player
+    updatePlayer(id, data) {
+        if (!this.peers.has(id)) {
+            console.error("Client does not exist", id);
+            return;
+        }
+        const player = this.peers.get(id);
+        if (data.prop == 'score') {
+            player.score = data.value;
+            player.drawer.updateScore(data.value);
+        } else {
+            if (data.prop == 'block') {
+                player.block.pos = data.value.pos;
+                player.block.matrix = data.value.matrix;
+            } else if (data.prop == 'board') {
+                player.board.matrix = data.value.matrix;
+            }
+            player.drawer.draw();
         }
     }
 
@@ -84,16 +106,30 @@ class ConnManager {
             [...self.peers.entries()].forEach(([id, player]) => {
                 self.playerManager.removePlayer(player);
             })
+            self.peers.clear();
 
             // set up local game
             self.document.getElementById('block').classList.add('small');
             self.localPlayer = self.playerManager.addPlayer();
             self.localPlayer.element.querySelector('.tetris').classList.add('local');
+            self.watchEvents();
             self.controller = new Controller(document, self.localPlayer);
             self.localPlayer.run();
         }
         //self.name = name;
-        
     }
 
+    // watch and send events to server
+    watchEvents() {
+        const localPlayer = this.localPlayer;
+        ['board', 'score', 'block'].forEach(prop => {
+            localPlayer.events.listen(prop, () => {
+                //console.log(localPlayer[prop]);
+                this.send({
+                    type: 'state-update',
+                    player: {prop: prop, value: localPlayer[prop]},
+                });
+            });
+        });
+    }
 }

@@ -7,6 +7,7 @@ const Client = require('./client');
 const rooms = new Map;
 const clients = new Set;
 
+// broadcast whenever the set of clients in the room changes
 function broadcastJoin(room) {
     // get array of all clients in the room
     const clients = [...room.clients];
@@ -21,6 +22,23 @@ function broadcastJoin(room) {
     })
 }
 
+// broadcast updated state of client to all clients in the same room
+function broadcastState(sender, data) {
+    // get array of all clients in the room
+    const clients = [...sender.room.clients];
+    clients.forEach(c => {
+        // don't broadcast to yourself
+        if (c === sender) { return;}
+        // broadcast to all other clients
+        c.send ({
+            type: 'broadcast-state',
+            senderID: sender.id,
+            data: data,
+        })
+    })
+}
+
+// generate a unique client id
 function createUniqueID() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -83,6 +101,9 @@ server.on('connection', conn => {
             room.join(client);
             broadcastJoin(room);
             console.log(rooms);
+        } else if (data.type == 'state-update') {
+            broadcastState(client, data.player);
+            //console.log(data.player);
         }
         
     })

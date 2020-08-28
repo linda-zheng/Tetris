@@ -1,11 +1,14 @@
 class Player
 {
     constructor(element) //, name
-    {
-        this.factory = new BlockFactory();
-        this.block = this.factory.createBlock('T');
-        this.board = new Board();
+    {   
+        // setting up basic data members
+        this.events = new Events();
         this.score = 0;
+        this.board = new Board();
+        this.factory = new BlockFactory();
+        this.block = null;
+        this.resetBlock();
 
         // ensures that the moving block drops once per second
         this.dropCounter = 0;
@@ -15,9 +18,10 @@ class Player
         //this.name = name;
         this.element = element;
         this.drawer = new Drawer(this, element);
-
-        // keep track of events
-        //this.events = new Events();
+        
+        // events that trigger callbacks when different data members are changed
+        this.events.listen('score', score => {this.drawer.updateScore(score);});
+        this.events.emit('score', this.score);
     }
 
     // start the game
@@ -38,11 +42,6 @@ class Player
         return this.name;
     }
 
-    // get score
-    getScore() {
-        return this.score;
-    }
-
     // get board 
     getBoard() {
         return this.board;
@@ -61,8 +60,9 @@ class Player
         if (this.isCollision()) {
             this.board.clear();
             this.score = 0;
-            this.drawer.updateScore();
+            this.events.emit('score', this.score);
         }
+        this.events.emit('block', this.block);
     }
 
     // return true if a collision is present
@@ -92,8 +92,9 @@ class Player
         })
         ///console.table(this.board.getMatrix());
         this.score += this.board.sweep();
-        this.drawer.updateScore();
-        this.resetBlock();
+        this.events.emit('score', this.score);
+        this.resetBlock(); // block emitted here
+        this.events.emit('board', this.board);
     }
 
     // rotate the block
@@ -114,21 +115,26 @@ class Player
                 return;
             }
         }
+        this.events.emit('block', this.block);
     }
 
     // move the block
     moveBlock(dir, isX) {
         this.block.move(dir, isX);
+        // if it is a vertical movement, we reset the drop counter
+        if (!isX) {
+            this.dropCounter = 0;
+        }
+        // if there is a collision, revert the movement
         if (this.isCollision()) {
             this.block.move(-dir, isX);
             // if we can't move down, we want to place the block
             if (!isX) {
                 this.place();
+                return;
             }
-        }
-        // if it is a vertical movement, we reset the drop counter
-        if (!isX) {
-            this.dropCounter = 0;
+        } else {
+            this.events.emit('block', this.block);
         }
     }
 

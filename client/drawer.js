@@ -8,7 +8,7 @@ class Drawer {
         this.context = this.canvas.getContext('2d');
         // make everything 20 times bigger
         this.context.scale(20, 20);
-              
+
         // colours for rectangles
         this.colours = [
             null,
@@ -70,7 +70,7 @@ class Drawer {
     }
 
     // update the score
-    updateScore() {
-        this.score.innerText = "Score: "+this.player.getScore();
+    updateScore(score) {
+        this.score.innerText = "Score: "+ score;
     }
 }
