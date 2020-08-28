@@ -3,15 +3,15 @@ body {
     color: #fff;
     font-family: sans-serif;
     text-align: center;
-    line-height: 1.5em;
+    line-height: 2em;
 }
 
 .input, .score, .name, .text, .btn {
     color: #fff;
     text-align: center;
-    font-size: 1em;
+    font-size: 1.2em;
     font-family: sans-serif;
-    line-height: 1.1em;
+    line-height: 1.5em;
 }
 
 .input {
@@ -46,13 +46,13 @@ body {
 }
 
 .tetris {
-    border: .1em solid #404040;
+    border: .2em solid #404040;
     width: auto;
     height: 80%;
 }
 
 .tetris.local {
-    border: .1em solid #fff;
+    border: .2em solid #fff;
 }
 
 .block {

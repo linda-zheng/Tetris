@@ -15,6 +15,9 @@ class Player
         //this.name = name;
         this.element = element;
         this.drawer = new Drawer(this, element);
+
+        // keep track of events
+        //this.events = new Events();
     }
 
     // start the game

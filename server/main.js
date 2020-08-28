@@ -62,6 +62,13 @@ server.on('connection', conn => {
             var oldroom = client.room;
             if (oldroom) {
                 oldroom.leave(client);
+                // remove old room if there are no more clients
+                // otherwise, notify old room that someone has left
+                if (oldroom.clients.size === 0) {
+                    oldroom.delete(oldroom.id);
+                } else {
+                    broadcastJoin(oldroom);
+                }
             }
 
             // join new room

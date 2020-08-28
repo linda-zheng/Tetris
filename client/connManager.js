@@ -5,6 +5,8 @@ class ConnManager {
         //this.name = "";
         this.peers = new Map;
         this.playerManager = playerManager;
+        this.localPlayer = null;
+        this.controller = null;
     }
 
     // connect to a given address
@@ -59,6 +61,7 @@ class ConnManager {
     }
 
     // join a room
+    // use self to pass the current instance of connection manager
     join(self) {
         const room = self.document.getElementById('roomInput').value;
         //const name = self.document.getElementById('nameInput').value;
@@ -73,13 +76,24 @@ class ConnManager {
         if (room !== "") { // && name !== ""
             self.send({type: 'join-room', id: room});
             //self.send({type: 'join-room', id: room, name: name});
+
+            // delete all current games on the screen
+            if (self.localPlayer) {
+                self.playerManager.removePlayer(self.localPlayer);
+            }
+            [...self.peers.entries()].forEach(([id, player]) => {
+                self.playerManager.removePlayer(player);
+            })
+
+            // set up local game
+            self.document.getElementById('block').classList.add('small');
+            self.localPlayer = self.playerManager.addPlayer();
+            self.localPlayer.element.querySelector('.tetris').classList.add('local');
+            self.controller = new Controller(document, self.localPlayer);
+            self.localPlayer.run();
         }
         //self.name = name;
-        self.document.getElementById('block').classList.add('small');
-        const localPlayer = self.playerManager.addPlayer();
-        localPlayer.element.querySelector('.tetris').classList.add('local');
-        const controller = new Controller(document, localPlayer);
-        localPlayer.run();
+        
     }
 
 }
