@@ -22,6 +22,9 @@ const clients = new Set;
 
 // broadcast whenever the set of clients in the room changes
 function broadcastJoin(room) {
+    if (room == null) {
+        return;
+    }
     // get array of all clients in the room
     const clients = [...room.clients];
     clients.forEach(client => {
@@ -115,7 +118,7 @@ webSocketServer.on('connection', conn => {
                 // remove old room if there are no more clients
                 // otherwise, notify old room that someone has left
                 if (oldroom.clients.size === 0) {
-                    oldroom.delete(oldroom.id);
+                    rooms.delete(oldroom.id);
                 } else {
                     broadcastJoin(oldroom);
                 }
