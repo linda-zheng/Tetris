@@ -1,5 +1,18 @@
-const WebSocketServer =  require('ws').Server;
-const server = new WebSocketServer({port: 9000});
+// Setup basic express server
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var port = process.env.PORT || 3000;
+
+server.listen(port, () => {
+    console.log('Server listening at port %d', port);
+});
+
+var path = require('path');
+app.use(express.static(path.join(__dirname, '/public')));
+
+const WebSocket = require("ws");
+const webSocketServer = new WebSocket.Server({ server });
 
 const Room = require('./room');
 const Client = require('./client');
@@ -71,7 +84,7 @@ function createUniqueID() {
     return id;
 }
 
-server.on('connection', conn => {
+webSocketServer.on('connection', conn => {
     console.log('Connection established');
     const client = new Client(conn, createUniqueID());
     clients.add(client.id);
