@@ -57,7 +57,7 @@ class ConnManager {
         if (data.prop == 'score') {
             player.score = data.value;
             player.drawer.updateScore(data.value);
-        } else {
+        } else if (data.prop == 'block' || data.prop == 'board'){
             player[data.prop] = Object.assign(player[data.prop], data.value);
             player.drawer.draw();
         }
@@ -114,7 +114,7 @@ class ConnManager {
 
             // set up local game
             self.document.getElementById('block').classList.add('small');
-            self.localPlayer = self.playerManager.addPlayer();
+            self.localPlayer = self.playerManager.addPlayer(true);
             self.localPlayer.element.querySelector('.tetris').classList.add('local');
             self.watchEvents();
             self.controller = new Controller(document, self.localPlayer);
@@ -133,7 +133,7 @@ class ConnManager {
     // watch and send events to server
     watchEvents() {
         const localPlayer = this.localPlayer;
-        ['board', 'score', 'block'].forEach(prop => {
+        ['board', 'score', 'block', 'heldBlock', 'nextBlock'].forEach(prop => {
             localPlayer.events.listen(prop, () => {
                 this.send({
                     type: 'state-update',
@@ -155,8 +155,9 @@ class ConnManager {
                 w: player.board.w,
                 h: player.board.h,
             },
-            score: player.score,
+            score: player.score
         };
+        // don't need to send held block because it is initially null
     }
 
     // unserialize and update player state

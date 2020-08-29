@@ -38,7 +38,8 @@ body {
 }
 
 .player {
-    width: 30%;
+    width: 20%;
+    height: auto;
     flex: 1 1 auto;
     justify-content: center;
     text-align: center;
@@ -47,7 +48,7 @@ body {
 .tetris {
     border: .2em solid #404040;
     width: auto;
-    height: 80%;
+    height: 60%;
 }
 
 .tetris.local {
@@ -64,5 +65,16 @@ body {
 }
 
 .block.small {
-    width: 30%;
+    width: 20%;
+}
+
+.box {
+    display:inline-block; 
+}
+
+.heldBlock, .nextBlock {
+    border: .2em solid #fff;
+    width: auto;
+    height: 10%;
+    flex: 1 1 auto;
 }

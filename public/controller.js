@@ -8,9 +8,10 @@ class Controller {
             "cw": 4,
             "ccw": 5,
             "reset": 6,
+            "hold": 7,
         };
-        this.cmdOrder = ["left", "right", "down", "drop", "cw", "ccw", "reset"]
-        this.cmdKeyCode = [37,39,40,32,38,67,82];
+        this.cmdOrder = ["left", "right", "down", "drop", "cw", "ccw", "reset", "hold"]
+        this.cmdKeyCode = [37,39,40,13,38,67,82,32];
 
         this.document = document
         this.player = player
@@ -29,8 +30,11 @@ class Controller {
                 this.player.rotateBlock(+1, true);
             } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["drop"]]) {
                 this.player.drop();
+            } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["reset"]]) {
+                this.player.reset();
+            } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["hold"]]) {
+                this.player.hold();
             }
-            // TODO: reset command
         })
 
         this.displayCmd();

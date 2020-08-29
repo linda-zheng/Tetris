@@ -19,10 +19,24 @@
         </div>
         <template id="player-template">
             <div class="player">
-                <div class="name"></div>
-                <div class="score">Score: 0</div>
-                <!--canvas element is used to draw graphics-->
-                <canvas class="tetris" width="240" height="400"></canvas>
+                <div class="player-top">
+                   <div class="name"></div>
+                    <div class="score">Score: 0</div>
+                    <!--canvas element is used to draw graphics-->
+                    <canvas class="tetris" width="240" height="400"></canvas> 
+                </div>
+                <template id="player-blocks-template">  
+                    <div class="player-bottom">
+                        <div class="box"> 
+                            <div class="text">Next Block: </div>
+                            <canvas class="nextBlock" width="75" height="75"></canvas>
+                        </div>
+                        <div class="box">
+                            <div class="text">Held Block: </div>
+                            <canvas class="heldBlock" width="75" height="75"></canvas>   
+                        </div>
+                    </div>
+                </template>
             </div>
         </template>
 
@@ -36,6 +50,7 @@
         <script src="block.js"></script>
         <script src="blockFactory.js"></script>
         <script src="drawer.js"></script>
+        <script src="localDrawer.js"></script>
         <script src="board.js"></script>
         <script src="player.js"></script>
         <script src="main.js"></script>
