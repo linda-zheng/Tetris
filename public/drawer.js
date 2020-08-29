@@ -28,7 +28,7 @@ class Drawer {
         this.updateScore();
         this.localDrawer = null;
         if (isLocal) {
-            this.localDrawer = new LocalDrawer(player, element);
+            this.localDrawer = new LocalDrawer(player, element, this.context);
         }
     }
 
@@ -69,9 +69,13 @@ class Drawer {
         this.drawMatrix(this.player.getBoard().getMatrix(), {x: 0, y: 0}, this.context);
 
         // draw the new block
-        var block = this.player.getBlock();
-        var coord = block.getCoordinates();
+        if (this.localDrawer != null) {
+            this.localDrawer.drawShadowBlock();
+        }
+        const block = this.player.getBlock();
+        const coord = block.getCoordinates();
         this.drawMatrix(block.getMatrix(), {x: coord.x_min, y: coord.y_min}, this.context);
+        
     }
 
     // update the score

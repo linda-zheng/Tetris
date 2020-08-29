@@ -1,5 +1,5 @@
 class LocalDrawer {
-    constructor(player, element) {
+    constructor(player, element, context) {
         this.player = player;
         this.canvasAll = [...element.querySelectorAll('canvas')];
         this.nextBlockCanvas = this.canvasAll[1];
@@ -8,7 +8,7 @@ class LocalDrawer {
         this.heldBlock = this.heldBlockCanvas.getContext('2d');
         this.nextBlock.scale(20, 20);
         this.heldBlock.scale(20, 20);
-
+        this.context = context;
         // colours for rectangles
         this.colours = [
             null,
@@ -19,6 +19,7 @@ class LocalDrawer {
             '#9B9655',
             '#97D2E1',
             '#F5D788',
+            '#202028', // colour for shadow
         ]
     }
 
@@ -48,6 +49,15 @@ class LocalDrawer {
         const heldBlock = this.player.heldBlock;
         if (heldBlock != null) {
             this.drawMatrix(heldBlock.getMatrix(), {x: 0, y: 0}, this.heldBlock);
+        }
+    }
+
+    // draw the shadow of the current block
+    drawShadowBlock() {
+        const block = this.player.getShadowBlock();
+        if (block != null) {            
+            const coord = block.getCoordinates();
+            this.drawMatrix(block.getMatrix(), {x: coord.x_min, y: coord.y_min}, this.context);
         }
     }
 }

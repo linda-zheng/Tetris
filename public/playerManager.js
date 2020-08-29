@@ -15,7 +15,6 @@ class PlayerManager {
             .children[0];
         if (isLocal) {
             this.localTemplate = element.querySelector('#player-blocks-template');
-            console.log(this.localTemplate);
             const subelement = this.document
             .importNode(this.localTemplate.content, true)
             .children[0];

@@ -101,7 +101,6 @@ class Player
         this.events.emit('board', this.board);
         this.block = this.nextBlock;
         this.nextBlock = this.resetBlock(); 
-        this.heldBlock = null;
         this.drawer.drawBlocks();
         this.events.emit('block', this.block);
     }
@@ -201,5 +200,44 @@ class Player
         this.drawer.drawBlocks();
     }
 
+    // get the position of a shadow block
+    getShadowBlock() {
+        var shadowBlock = new Block();
+        // copy the matrix
+        shadowBlock.matrix = this.block.matrix.map(function(arr) {
+            return arr.slice();
+        });
+        shadowBlock.matrix.forEach((row,y) => {
+            row.forEach((val,x)=> {
+                if (val != 0) {
+                    shadowBlock.matrix[y][x] = 8;
+                };
+            });
+        });
+        shadowBlock.pos = Object.assign(shadowBlock.pos, this.block.pos);
+        while (!this.isCollision(shadowBlock)) {
+            shadowBlock.pos.y ++;
+        }  
+          
+        // adjust block to last valid position
+        shadowBlock.pos.y --;  
+        if (shadowBlock.pos.y == this.block.pos.y) {
+            // we don't want to paint on top of current block
+            return null;
+        }
+        return shadowBlock;
+    }
+
+    // speed up by 10%
+    speedUp() {
+        this.dropInterval *= 0.5;
+        console.log(this.dropInterval);
+    }
+
+    // speed down by 10%
+    speedDown() {
+        this.dropInterval *= 1.5;
+        console.log(this.dropInterval);
+    }
 }
 
