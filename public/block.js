@@ -1,7 +1,7 @@
 class Block {
     constructor() {
         this.matrix = [[]];
-        this.pos = {x:0, y:0};
+        this.pos = {x: 0, y: 0};
     }
 
     // returns true if the block is filled at the given location
@@ -11,14 +11,9 @@ class Block {
 
     // set block to center
     setToCenter(boardWidth) {
-        this.pos = {x: Math.floor(boardWidth/2 - this.matrix[0].length/2), y: 0};
+        this.pos.x = Math.floor(boardWidth/2 - this.matrix[0].length/2);
     }
-
-    // set coordinates of block
-    setCoordinates(x,y) {
-        this.pos = {x: x, y: y};
-    }
-
+    
     // get coordinates of block
     getCoordinates() {
         return {

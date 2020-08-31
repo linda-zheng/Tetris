@@ -60,13 +60,6 @@ class Player
     resetBlock() {
         const types = 'ILJOTSZ';
         const block = this.factory.createBlock(types[Math.floor(types.length * Math.random())]);
-        // reset the board if there is no space for the new block
-        if (this.isCollision(block)) {
-            this.board.clear();
-            this.events.emit('board', this.board);
-            this.score = 0;
-            this.events.emit('score', this.score);
-        }
         return block;
     }
 
@@ -96,13 +89,28 @@ class Player
             })
         })
         ///console.table(this.board.getMatrix());
+
         this.score += this.board.sweep();
         this.events.emit('score', this.score);
         this.events.emit('board', this.board);
         this.block = this.nextBlock;
-        this.nextBlock = this.resetBlock(); 
-        this.drawer.drawBlocks();
-        this.events.emit('block', this.block);
+        // reset the board if there is no space for the new block
+        if (this.isCollision(this.block)) {
+            this.board.clear();
+            this.events.emit('board', this.board);
+            this.score = 0;
+            this.events.emit('score', this.score);
+            this.block = this.resetBlock();
+            this.nextBlock = this.resetBlock();
+            this.heldBlock = null;
+            this.drawer.drawBlocks();
+            this.events.emit('block', this.block);
+        } else {
+            this.nextBlock = this.resetBlock(); 
+            this.drawer.drawBlocks();
+            this.events.emit('block', this.block);
+        }
+        
     }
 
     // rotate the block
@@ -119,7 +127,8 @@ class Player
             // don't rotate
             if (offset > (coord.x_max - coord.x_min)) {
                 this.block.rotate(-dir);
-                this.block.setCoordinates(coord.x_min, coord.y_min);
+                this.block.pos.x = coord.x_min;
+                this.block.pos.y = coord.y_min;
                 return;
             }
         }
@@ -168,6 +177,8 @@ class Player
         this.heldBlock = null;
         this.nextBlock = this.resetBlock();
         this.drawer.drawBlocks();
+        this.events.emit('heldBlock', this.heldBlock);
+        this.events.emit('nextBlock', this.nextBlock);
     }
 
     // holds the current block
@@ -198,6 +209,9 @@ class Player
         this.heldBlock.pos.x = 0;
         this.heldBlock.pos.y = 0;
         this.drawer.drawBlocks();
+        this.events.emit('block', this.block);
+        this.events.emit('heldBlock', this.heldBlock);
+        this.events.emit('nextBlock', this.nextBlock);
     }
 
     // get the position of a shadow block
@@ -234,8 +248,8 @@ class Player
         console.log(this.dropInterval);
     }
 
-    // speed down by 10%
-    speedDown() {
+    // slow down by 10%
+    slowDown() {
         this.dropInterval *= 1.5;
         console.log(this.dropInterval);
     }

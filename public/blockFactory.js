@@ -3,17 +3,17 @@ class BlockFactory {
         this.boardWidth = boardWidth;
         this.createBlock = function(type) {
             var block;
-            if (type == 'T') {
+            if (type === 'T') {
                 block = new TBlock(this.boardWidth);
-            } else if (type == 'O') {
+            } else if (type === 'O') {
                 block = new OBlock(this.boardWidth);
-            } else if (type == 'L') {
+            } else if (type === 'L') {
                 block = new LBlock(this.boardWidth);
-            }  else if (type == 'J') {
+            }  else if (type === 'J') {
                 block = new JBlock(this.boardWidth);
-            } else if (type == 'I') {
+            } else if (type === 'I') {
                 block = new IBlock(this.boardWidth);
-            } else if (type == 'S') {
+            } else if (type === 'S') {
                 block = new SBlock(this.boardWidth);
             } else {
                 block = new ZBlock(this.boardWidth);
