@@ -10,9 +10,9 @@ class Controller {
             "reset": 6,
             "hold": 7,
             "speed up": 8, 
-            "speed down": 9,
+            "slow down": 9,
         };
-        this.cmdOrder = ["left", "right", "down", "drop", "cw", "ccw", "reset", "hold", "speed up", "speed down"]
+        this.cmdOrder = ["left", "right", "down", "drop", "cw", "ccw", "reset", "hold", "speed up", "slow down"]
         this.cmdKeyCode = [37,39,40,13,38,67,82,32,81,87];
 
         this.document = document
@@ -38,8 +38,8 @@ class Controller {
                 this.player.hold();
             } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["speed up"]]) {
                 this.player.speedUp();
-            } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["speed down"]]) {
-                this.player.speedDown();
+            } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["slow down"]]) {
+                this.player.slowDown();
             }
         })
 
