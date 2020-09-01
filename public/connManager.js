@@ -93,16 +93,16 @@ class ConnManager {
     // use self to pass the current instance of connection manager
     join(self) {
         const room = self.document.getElementById('roomInput').value;
-        //const name = self.document.getElementById('nameInput').value;
+        const name = self.document.getElementById('nameInput').value;
         // check that fields are valid
         if (room == "") {
             self.document.getElementById('roomInput').value = "invalid room";
         } 
-        /*if (name == "") {
+        if (name == "") {
             self.document.getElementById('nameInput').value = "invalid name";
-        }*/
+        }
         
-        if (room !== "") { // && name !== ""
+        if (room !== "" && name !== "") {
             // delete all current games on the screen
             if (self.localPlayer) {
                 self.playerManager.removePlayer(self.localPlayer);
@@ -114,7 +114,7 @@ class ConnManager {
 
             // set up local game
             self.document.getElementById('block').classList.add('small');
-            self.localPlayer = self.playerManager.addPlayer(true);
+            self.localPlayer = self.playerManager.addPlayer(name, true);
             self.localPlayer.element.querySelector('.tetris').classList.add('local');
             self.watchEvents();
             self.controller = new Controller(document, self.localPlayer);
@@ -127,7 +127,6 @@ class ConnManager {
                 state: self.serialize(self.localPlayer),
             })
         }
-        //self.name = name;
     }
 
     // watch and send events to server
@@ -155,7 +154,8 @@ class ConnManager {
                 w: player.board.w,
                 h: player.board.h,
             },
-            score: player.score
+            score: player.score,
+            name: player.name,
         };
         // don't need to send held block because it is initially null
     }
@@ -165,7 +165,9 @@ class ConnManager {
         player.block = Object.assign(player.block, state.block);
         player.board = Object.assign(player.board, state.board);
         player.score = state.score;
+        player.name = state.name;
         player.drawer.updateScore(player.score);
         player.drawer.draw();
+        player.drawer.drawName();
     }
 }

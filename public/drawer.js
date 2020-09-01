@@ -1,8 +1,7 @@
 class Drawer {
     constructor(player, element, isLocal = false) {
         this.player = player;
-        /*this.name = element.querySelector('.name');
-        this.name.innerText = this.player.getName();*/
+        this.name = element.querySelector('.name');
         this.score = element.querySelector('.score');
         this.canvasAll = [...element.querySelectorAll('canvas')];
         this.canvas = this.canvasAll[0]
@@ -88,5 +87,10 @@ class Drawer {
         if (this.localDrawer != null) {
             this.localDrawer.drawBlocks();
         }
+    }
+
+    // draw the name
+    drawName() {
+        this.name.innerHTML=this.player.name;
     }
 }

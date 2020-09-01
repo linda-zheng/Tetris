@@ -72,6 +72,21 @@ function fetchRoomState(client) {
     })
 }
 
+// send state of new player to all clients currently in the room
+function broadcastPlayerState(client) {
+    const clients = [...client.room.clients];
+    clients.forEach(c => {
+        // don't send your own state
+        if (c === client) { return;}
+        // send state of all other clients
+        c.send ({
+            type: 'serialized-state',
+            peerID: client.id,
+            state: client.state,
+        })
+    })
+}
+
 // generate a unique client id
 function createUniqueID() {
     function s4() {
@@ -136,10 +151,10 @@ webSocketServer.on('connection', conn => {
             room.join(client);
             broadcastJoin(room);
             fetchRoomState(client);
+            broadcastPlayerState(client);
             console.log(rooms);
         } else if (data.type == 'state-update') {
             broadcastState(client, data.player);
-            //console.log(data.player);
         }
         
     })

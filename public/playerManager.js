@@ -7,7 +7,7 @@ class PlayerManager {
 
     // add a new player
     // returns the controller for that player
-    addPlayer(isLocal = false) {
+    addPlayer(name="", isLocal = false) {
         // create new element for new player
         // true = deep import
         const element = this.document
@@ -21,7 +21,7 @@ class PlayerManager {
             element.appendChild(subelement);
         }
         
-        const player = new Player(element, isLocal);
+        const player = new Player(element, name, isLocal);
         // add new element to browser
         this.document.body.appendChild(element);
         // add new player to instances

@@ -1,6 +1,6 @@
 class Player
 {
-    constructor(element, isLocal = false) //, name
+    constructor(element, name, isLocal = false) //, name
     {   
         // setting up basic data members
         this.events = new Events();
@@ -10,6 +10,7 @@ class Player
         this.block = this.resetBlock();
         this.heldBlock = null;
         this.nextBlock = this.resetBlock();
+        this.name = name;
 
         // ensures that the moving block drops once per second
         this.dropCounter = 0;
@@ -21,6 +22,7 @@ class Player
         this.drawer = new Drawer(this, element, isLocal);
         this.drawer.updateScore(0);
         this.drawer.drawBlocks();
+        this.drawer.drawName();
         
         // events that trigger callbacks when different data members are changed
         this.events.listen('score', score => {this.drawer.updateScore(score);});
