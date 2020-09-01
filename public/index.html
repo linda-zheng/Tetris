@@ -4,14 +4,17 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
+        <audio autoplay loop id="music" style="display:none">
+            <source src="tetris99.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="mute()" type="button" class="audio" id="muteBtn">Unmute</button>
         <div class="block" id="block">
             <div class="text" id="commands"></div>  
             <br/><br/>  
-        <!--
             <div class="text">Enter your name:</div>
             <input class="input" id="nameInput" type="text" maxlength="10">
             <br/><br/>
-        -->
             <div class="text">Enter a room code:</div>
             <input class="input" id="roomInput" type="text" maxlength="10">
             <br/><br/>
@@ -42,6 +45,7 @@
 
         
         <!--import scripts-->
+        <script src="audio.js"></script>
         <script src="connManager.js"></script>
         <script src="events.js"></script>
         <script src="playerManager.js"></script>
