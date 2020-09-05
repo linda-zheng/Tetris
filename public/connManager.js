@@ -2,7 +2,6 @@ class ConnManager {
     constructor(document, playerManager) {
         this.conn = null;
         this.document = document;
-        //this.name = "";
         this.peers = new Map;
         this.playerManager = playerManager;
         this.localPlayer = null;
@@ -36,7 +35,14 @@ class ConnManager {
             this.updatePlayer(data.peerID, data.state);
         } else if (data.type == 'game-over') {
             this.gameOver(data.peerID, data.score);
+        } else if (data.type == 'tetris') {
+            this.tetris();
         }
+    }
+
+    // tetris
+    tetris() {
+        this.localPlayer.pushUp();
     }
 
     // update game over for a player
@@ -156,6 +162,11 @@ class ConnManager {
             this.send({
                 type: 'game-over',
                 score: s,
+            });
+        });
+        localPlayer.events.listen("tetris", () => {
+            this.send({
+                type: 'tetris',
             });
         });
     }

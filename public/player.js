@@ -114,6 +114,8 @@ class Player
             }
         }
         this.drawer.draw();
+        this.events.emit('board', this.board);
+        this.events.emit('block', this.block);
     }
 
     // place the current block onto the board
@@ -128,7 +130,11 @@ class Player
             })
         })
 
-        this.score += this.board.sweep();
+        const s = this.board.sweep();
+        if (s >= 10) {
+            this.events.emit('tetris');
+        }
+        this.score += s;
         this.events.emit('score', this.score);
         this.events.emit('board', this.board);
         this.block = this.nextBlock;

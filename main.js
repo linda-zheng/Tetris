@@ -119,6 +119,19 @@ function broadcastGameOver(client, score) {
     client.isGameOver = true;
 }
 
+// broadcast tetris
+function broadcastTetris(client){
+    const clients = [...client.room.clients];
+    clients.forEach(c => {
+        // don't send your own state
+        if (c === client) { return;}
+        // send state of all other clients
+        c.send ({
+            type: 'tetris',
+        })
+    })
+}
+
 webSocketServer.on('connection', conn => {
     console.log('Connection established');
     const client = new Client(conn, createUniqueID());
@@ -173,6 +186,8 @@ webSocketServer.on('connection', conn => {
             broadcastState(client, data.player);
         } else if (data.type == 'game-over') {
             broadcastGameOver(client, data.score);
+        } else if (data.type == 'tetris') {
+            broadcastTetris(client);
         }
         
     })
