@@ -20,6 +20,9 @@ class Controller {
         
         // event listener for left/right/down movement
         this.document.addEventListener('keydown', event => {
+            if (this.player.isGameOver) {
+                return;
+            }
             if (event.keyCode == this.cmdKeyCode[this.cmdIdx["left"]]) {
                 this.player.moveBlock(-1, true);
             } else if (event.keyCode == this.cmdKeyCode[this.cmdIdx["right"]]) {

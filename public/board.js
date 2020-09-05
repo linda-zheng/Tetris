@@ -22,8 +22,9 @@ class Board {
         let score = 0;
         outer: for (let y = this.h-1; y >= 0; --y) {
             for (let x = 0; x < this.w; ++x) {
-                if (this.matrix[y][x] == 0) {
+                if (this.matrix[y][x] == 0 || this.matrix[y][x] == 8) {
                     // if row is not fully populated
+                    // or if row is solid block
                     continue outer;
                 }
             }
@@ -55,6 +56,24 @@ class Board {
     // get matrix
     getMatrix() {
         return this.matrix;
+    }
+
+    // push up by one row
+    pushUp() {
+        // remove top row
+        const row = this.matrix.splice(0,1)[0].fill(8);
+        // add the row to the bottom
+        this.matrix.push(row);
+    }
+
+    // generate random mosaic of board
+    random() {
+        for (let y = this.h-1; y >= 0; --y) {
+            for (let x = 0; x < this.w; ++x) {
+                this.matrix[y][x] = Math.floor(7 * Math.random()) + 1;
+            }
+        }
+
     }
 }
 

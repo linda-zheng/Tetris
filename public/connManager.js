@@ -34,7 +34,19 @@ class ConnManager {
             this.updatePlayerComponent(data.senderID, data.data);
         } else if (data.type == 'serialized-state') {
             this.updatePlayer(data.peerID, data.state);
+        } else if (data.type == 'game-over') {
+            this.gameOver(data.peerID, data.score);
         }
+    }
+
+    // update game over for a player
+    gameOver(id, score) {
+        if (!this.peers.has(id)) {
+            console.error("Client does not exist", id);
+            return;
+        }
+        const player = this.peers.get(id);
+        player.gameOver(score);
     }
 
     // update entire state of a given player
@@ -140,6 +152,12 @@ class ConnManager {
                 });
             });
         });
+        localPlayer.events.listen("gameOver", (s) => {
+            this.send({
+                type: 'game-over',
+                score: s,
+            });
+        });
     }
 
     // serialize player state
@@ -162,12 +180,17 @@ class ConnManager {
 
     // unserialize and update player state
     unserialize(state, player) {
-        player.block = Object.assign(player.block, state.block);
-        player.board = Object.assign(player.board, state.board);
-        player.score = state.score;
-        player.name = state.name;
-        player.drawer.updateScore(player.score);
-        player.drawer.draw();
-        player.drawer.drawName();
+        console.log(state);
+        if (state.isGameOver) {
+            player.isGameOver(state.score);
+        } else {
+            player.block = Object.assign(player.block, state.block);
+            player.board = Object.assign(player.board, state.board);
+            player.score = state.score;
+            player.name = state.name;
+            player.drawer.updateScore(player.score);
+            player.drawer.draw();
+            player.drawer.drawName();
+        }
     }
 }

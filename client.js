@@ -4,7 +4,6 @@ class Client {
         this.room = null;
         this.id = id;
         this.state = {};
-        //this.name = "";
     }
 
     // send msg to client

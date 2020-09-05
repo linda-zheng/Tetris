@@ -11,6 +11,7 @@ class Player
         this.heldBlock = null;
         this.nextBlock = this.resetBlock();
         this.name = name;
+        this.isGameOver = false;
 
         // ensures that the moving block drops once per second
         this.dropCounter = 0;
@@ -78,9 +79,45 @@ class Player
         return false;
     }
 
+    // initialize game over sequence
+    // clear board and blocks 
+    // update score
+    gameOver(score) {
+        this.block = null;
+        this.nextBlock = null;
+        this.heldBlock = null;
+        this.board.random();
+        this.drawer.drawGameOver(score);
+        this.isGameOver = true;
+    }
+
+    // add a row of blocks below
+    pushUp() {
+        // check that top row isn't empty
+        for (let i = 0; i < this.board.matrix[0].length; ++i) {
+            if (this.board.matrix[0][i] != 0) {
+                console.log("game over");
+                this.gameOver(this.score);
+                this.events.emit("gameOver", this.score);
+                return;
+            }
+        }
+        this.board.pushUp();
+        // move the current block to a good spot
+        if (this.isCollision(this.block)) {
+            this.block.pos.y--;
+            if (this.block.pos.y < 0) {
+                console.log("game over");
+                this.gameOver(this.score);
+                this.events.emit("gameOver", this.score);
+                return;
+            }
+        }
+        this.drawer.draw();
+    }
+
     // place the current block onto the board
     place() {
-        //console.table(this.board.getMatrix());
         const coord = this.block.getCoordinates();
         const matrix = this.block.getMatrix();
         matrix.forEach((row, y) => {
@@ -90,7 +127,6 @@ class Player
                 }
             })
         })
-        ///console.table(this.board.getMatrix());
 
         this.score += this.board.sweep();
         this.events.emit('score', this.score);
@@ -98,21 +134,15 @@ class Player
         this.block = this.nextBlock;
         // reset the board if there is no space for the new block
         if (this.isCollision(this.block)) {
-            this.board.clear();
-            this.events.emit('board', this.board);
-            this.score = 0;
-            this.events.emit('score', this.score);
-            this.block = this.resetBlock();
-            this.nextBlock = this.resetBlock();
-            this.heldBlock = null;
-            this.drawer.drawBlocks();
-            this.events.emit('block', this.block);
+            console.log("game over");
+            this.gameOver(this.score);
+            this.events.emit("gameOver", this.score);
+            return;
         } else {
             this.nextBlock = this.resetBlock(); 
             this.drawer.drawBlocks();
             this.events.emit('block', this.block);
         }
-        
     }
 
     // rotate the block

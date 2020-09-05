@@ -19,6 +19,7 @@ class Drawer {
             '#9B9655',
             '#97D2E1',
             '#F5D788',
+            'grey',
         ]
 
         // paint the background of the tetris board
@@ -36,6 +37,11 @@ class Drawer {
         // loop the update
         let lastTime = 0;
         const update = (time = 0) => {
+            // check if game over
+            if (this.player.isGameOver) {
+                return;
+            }
+
             // keep track of time since last update
             const deltaTime = time - lastTime;
             lastTime = time;
@@ -92,5 +98,12 @@ class Drawer {
     // draw the name
     drawName() {
         this.name.innerHTML=this.player.name;
+    }
+
+    // draw game over
+    drawGameOver(score) {
+        this.score.innerText = "FINAL SCORE: "+ score;
+        this.drawMatrix(this.player.getBoard().getMatrix(), {x: 0, y: 0}, this.context);
+        this.drawBlocks();
     }
 }

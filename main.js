@@ -102,6 +102,23 @@ function createUniqueID() {
     return id;
 }
 
+// broadcast game over to all clients currently in the room
+function broadcastGameOver(client, score) {
+    client.state.score = score;
+    const clients = [...client.room.clients];
+    clients.forEach(c => {
+        // don't send your own state
+        if (c === client) { return;}
+        // send state of all other clients
+        c.send ({
+            type: 'game-over',
+            peerID: client.id,
+            score: score,
+        })
+    })
+    client.isGameOver = true;
+}
+
 webSocketServer.on('connection', conn => {
     console.log('Connection established');
     const client = new Client(conn, createUniqueID());
@@ -125,7 +142,6 @@ webSocketServer.on('connection', conn => {
         data = JSON.parse(msg)
         if (data.type == 'join-room') {
             client.state = data.state;
-            //client.name = data.name;
             // remove from previous room
             var oldroom = client.room;
             if (oldroom) {
@@ -155,6 +171,8 @@ webSocketServer.on('connection', conn => {
             console.log(rooms);
         } else if (data.type == 'state-update') {
             broadcastState(client, data.player);
+        } else if (data.type == 'game-over') {
+            broadcastGameOver(client, data.score);
         }
         
     })
