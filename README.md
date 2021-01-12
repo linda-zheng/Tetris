@@ -14,4 +14,4 @@ or feel free to check out the deployed version https://tetris-august-2020.heroku
 ## Images
 ![Challenge a friend](./photos/1.png)
 ![Game over](./photos/2.png)
-![Play with lots of friends](./photos/2.png)
+![Play with lots of friends](./photos/3.png)
